@@ -7,6 +7,7 @@ import dto.movies.SecondPlayerMovie;
 import players.firstplayer.AbstractFirstPlayer;
 import players.secondplayer.AbstractSecondPlayer;
 import rules.finishchecker.FinishChecker;
+import rules.gamemanager.GameManager;
 import rules.moviemaker.MovieMaker;
 import rules.positiongenerator.PositionGenerator;
 
@@ -18,17 +19,12 @@ import rules.positiongenerator.PositionGenerator;
 public class Server2048 {
     private AbstractFirstPlayer first;
     private AbstractSecondPlayer second;
-    private PositionGenerator positionGenerator;
-    private MovieMaker movieMaker;
-    private FinishChecker finishChecker;
+    private GameManager gameManager;
 
-    public Server2048(AbstractFirstPlayer first, AbstractSecondPlayer second, PositionGenerator newPositionGenerator,
-                      MovieMaker movieMaker, FinishChecker finishChecker) {
+    public Server2048(AbstractFirstPlayer first, AbstractSecondPlayer second, GameManager gameManager) {
         this.first = first;
         this.second = second;
-        this.positionGenerator = newPositionGenerator;
-        this.movieMaker = movieMaker;
-        this.finishChecker = finishChecker;
+        this.gameManager = gameManager;
     }
 
     public AbstractFirstPlayer getFirst() {
@@ -47,42 +43,20 @@ public class Server2048 {
         this.second = second;
     }
 
-    public PositionGenerator getPositionGenerator() {
-        return positionGenerator;
-    }
-
-    public void setPositionGenerator(PositionGenerator positionGenerator) {
-        this.positionGenerator = positionGenerator;
-    }
-
-    public MovieMaker getMovieMaker() {
-        return movieMaker;
-    }
-
-    public void setMovieMaker(MovieMaker movieMaker) {
-        this.movieMaker = movieMaker;
-    }
-
-    public FinishChecker getFinishChecker() {
-        return finishChecker;
-    }
-
-    public void setFinishChecker(FinishChecker finishChecker) {
-        this.finishChecker = finishChecker;
-    }
-
     public Result playGame() {
-        Position pos = positionGenerator.generatePosition(second);
+        gameManager.setFirst(first);
+        gameManager.setSecond(second);
+        Position pos = gameManager.generatePosition();
         Integer movie = 0;
         Integer points = 0;
-        while(!finishChecker.isFinish(pos)) {
+        while(!gameManager.isFinish(pos)) {
             FirstPlayerMovie movie1;
             SecondPlayerMovie movie2;
-            movie1 = first.movie(pos, movieMaker.getCorrectFirstPlayerMovies(pos));
-            pos = movieMaker.movie(pos, movie1);
+            movie1 = gameManager.findFirstMovie(pos);
+            pos = gameManager.makeMovie(pos, movie1);
             movie++;
-            movie2 = second.movie(pos, movieMaker.getCorrectSecondPlayerMovies(pos));
-            pos = movieMaker.movie(pos, movie2);
+            movie2 = gameManager.findSecondMovie(pos);
+            pos = gameManager.makeMovie(pos, movie2);
         }
         return new Result(pos, movie, points);
     }

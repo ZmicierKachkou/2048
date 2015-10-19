@@ -19,6 +19,11 @@ public class SecondPlayerMovie extends Coords{
         this.tile = tile;
     }
 
+    public SecondPlayerMovie(Coords coords, Tile tile) {
+        super(coords.getX(), coords.getY());
+        this.tile = tile;
+    }
+
     public Tile getTile() {
         return tile;
     }

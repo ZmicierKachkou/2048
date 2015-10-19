@@ -6,19 +6,21 @@ import dto.tiles.Tile;
 import dto.movies.FirstPlayerMovie;
 import dto.movies.SecondPlayerMovie;
 
+import java.util.List;
+
 /**
  * Created on 29.09.2015.
  *
  * @author Źmicier Dzikański
  */
 public interface MovieMaker {
-    public boolean isCorrectMovie(Position position, FirstPlayerMovie movie);
-    public boolean isCorrectMovie(Position position, SecondPlayerMovie movie);
+    boolean isCorrectMovie(Position position, FirstPlayerMovie movie);
+    boolean isCorrectMovie(Position position, SecondPlayerMovie movie);
 
-    public Position movie(Position position, FirstPlayerMovie movie);
-    public Position movie(Position position, SecondPlayerMovie movie);
+    Position movie(Position position, FirstPlayerMovie movie);
+    Position movie(Position position, SecondPlayerMovie movie);
 
-    public FirstPlayerMovie[] getCorrectFirstPlayerMovies(Position position);
-    public Tile[] getCorrectSecondPlayerMovies(Position position);
-    public Coords[] getEmptyCells(Position position);
+    List<FirstPlayerMovie> getCorrectFirstPlayerMovies(Position position);
+    List<Tile> getCorrectSecondPlayerMovies(Position position);
+    List<Coords> getEmptyCells(Position position);
 }
