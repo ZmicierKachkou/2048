@@ -3,12 +3,14 @@ package rules.gamemanager.impl;
 import dto.Position;
 import dto.movies.FirstPlayerMovie;
 import dto.movies.SecondPlayerMovie;
+import exceptions.IncorrectMovieException;
 import players.firstplayer.AbstractFirstPlayer;
 import players.secondplayer.AbstractSecondPlayer;
 import rules.finishchecker.FinishChecker;
 import rules.gamemanager.GameManager;
 import rules.moviemaker.MovieMaker;
 import rules.positiongenerator.PositionGenerator;
+import rules.tilesmerger.TileMerger;
 
 /**
  * Created on 18.10.2015.
@@ -21,9 +23,20 @@ public class SimpleGameManager implements GameManager {
     private PositionGenerator positionGenerator;
     private MovieMaker movieMaker;
     private FinishChecker finishChecker;
+    private int size;
 
     public PositionGenerator getPositionGenerator() {
         return positionGenerator;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    public void setSize(int i) {
+        size = i;
     }
 
     public void setPositionGenerator(PositionGenerator positionGenerator) {
@@ -40,7 +53,9 @@ public class SimpleGameManager implements GameManager {
 
     @Override
     public Position generatePosition() {
-        return positionGenerator.generatePosition(second, movieMaker.getCorrectSecondPlayerMovies(null), movieMaker.getEmptyCells(null), movieMaker);
+        Position position = new Position(size);
+        return positionGenerator.generatePosition(second, movieMaker.getCorrectSecondPlayerMovies(position),
+                movieMaker.getEmptyCells(position), movieMaker);
     }
 
     @Override
@@ -54,13 +69,13 @@ public class SimpleGameManager implements GameManager {
     }
 
     @Override
-    public Position makeMovie(Position pos, FirstPlayerMovie movie) {
-        return movieMaker.movie(pos, movie);
+    public void makeMovie(Position pos, FirstPlayerMovie movie) throws IncorrectMovieException {
+        movieMaker.movie(pos, movie);
     }
 
     @Override
-    public Position makeMovie(Position pos, SecondPlayerMovie movie) {
-        return movieMaker.movie(pos, movie);
+    public void makeMovie(Position pos, SecondPlayerMovie movie) {
+        movieMaker.movie(pos, movie);
     }
 
     public FinishChecker getFinishChecker() {
@@ -77,6 +92,16 @@ public class SimpleGameManager implements GameManager {
     }
 
     @Override
+    public TileMerger getTileMerger() {
+        return movieMaker.getTileMerger();
+    }
+
+    @Override
+    public void setTileMerger(TileMerger tileMerger) {
+         movieMaker.setTileMerger(tileMerger);
+    }
+
+    @Override
     public void setFirst(AbstractFirstPlayer first) {
          this.first = first;
     }
@@ -84,5 +109,10 @@ public class SimpleGameManager implements GameManager {
     @Override
     public void setSecond(AbstractSecondPlayer second) {
          this.second = second;
+    }
+
+    @Override
+    public boolean isReady() {
+        return positionGenerator != null && movieMaker != null && finishChecker != null && size > 0;
     }
 }

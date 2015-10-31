@@ -4,6 +4,7 @@ import dto.Position;
 import dto.Result;
 import dto.movies.FirstPlayerMovie;
 import dto.movies.SecondPlayerMovie;
+import exceptions.IncorrectMovieException;
 import players.firstplayer.AbstractFirstPlayer;
 import players.secondplayer.AbstractSecondPlayer;
 import rules.finishchecker.FinishChecker;
@@ -43,7 +44,7 @@ public class Server2048 {
         this.second = second;
     }
 
-    public Result playGame() {
+    public Result playGame() throws IncorrectMovieException {
         gameManager.setFirst(first);
         gameManager.setSecond(second);
         Position pos = gameManager.generatePosition();
@@ -52,11 +53,12 @@ public class Server2048 {
         while(!gameManager.isFinish(pos)) {
             FirstPlayerMovie movie1;
             SecondPlayerMovie movie2;
+            System.out.println(pos);
             movie1 = gameManager.findFirstMovie(pos);
-            pos = gameManager.makeMovie(pos, movie1);
+            gameManager.makeMovie(pos, movie1);
             movie++;
             movie2 = gameManager.findSecondMovie(pos);
-            pos = gameManager.makeMovie(pos, movie2);
+            gameManager.makeMovie(pos, movie2);
         }
         return new Result(pos, movie, points);
     }

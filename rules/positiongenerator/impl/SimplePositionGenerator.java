@@ -21,8 +21,9 @@ public class SimplePositionGenerator implements PositionGenerator {
     public Position generatePosition(AbstractSecondPlayer player, List<Tile> tiles, List<Coords> coords, MovieMaker movieMaker) {
         Position pos = new Position();
         SecondPlayerMovie movie = player.movie(pos, tiles, coords);
-        pos = movieMaker.movie(pos, movie);
+        movieMaker.movie(pos, movie);
         movie = player.movie(pos, tiles, coords);
-        return movieMaker.movie(pos, movie);
+        movieMaker.movie(pos, movie);
+        return pos;
     }
 }

@@ -22,12 +22,12 @@ public class RandomPositionGenerator implements PositionGenerator {
         Position pos = new Position();
         int n = (int)Math.floor(Math.random() * coords.size());
         SecondPlayerMovie movie = new SecondPlayerMovie(coords.get(n), tiles.get((int)Math.floor(Math.random() * tiles.size())));
-        pos = movieMaker.movie(pos, movie);
+        movieMaker.movie(pos, movie);
         if(coords.size() > 1) {
             coords.remove(n);
             movie = new SecondPlayerMovie(coords.get((int)Math.floor(Math.random() * (coords.size()))),
                     tiles.get((int)Math.floor(Math.random() * tiles.size())));
-            pos = movieMaker.movie(pos, movie);
+            movieMaker.movie(pos, movie);
         }
         return pos;
     }

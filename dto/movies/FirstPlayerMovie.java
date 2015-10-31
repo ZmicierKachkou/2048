@@ -18,7 +18,7 @@ public enum FirstPlayerMovie {
         return value;
     }
 
-    public FirstPlayerMovie getMovie(Integer i) {
+    public static FirstPlayerMovie getMovie(Integer i) {
         FirstPlayerMovie[] allMovies = FirstPlayerMovie.values();
         return allMovies[i % allMovies.length];
     }

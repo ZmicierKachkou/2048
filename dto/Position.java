@@ -72,9 +72,25 @@ public class Position {
         if (size != position.size) return false;
         for(int x=0; x<size; x++) {
             for(int y=0; y<size; y++) {
-                if(!this.table[x][y].equals(position.table[x][y])) return false;
+                if(this.table[x][y] == null) {
+                    if(position.table[x][y] != null) return false;
+                }
+                else if(!this.table[x][y].equals(position.table[x][y])) return false;
             }
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for(int x = 0; x < size; x++) {
+            for(int y = 0; y < size; y++) {
+                if(table[x][y] == null) builder.append(" - \t");
+                else builder.append(" ").append(table[x][y].getValue()).append(" \t");
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
     }
 }
