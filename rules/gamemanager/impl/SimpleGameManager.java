@@ -60,12 +60,12 @@ public class SimpleGameManager implements GameManager {
 
     @Override
     public FirstPlayerMovie findFirstMovie(Position pos) {
-        return first.movie(pos, movieMaker.getCorrectFirstPlayerMovies(pos));
+        return first.movie(pos.clone(), movieMaker.getCorrectFirstPlayerMovies(pos), this.clone());
     }
 
     @Override
     public SecondPlayerMovie findSecondMovie(Position pos) {
-        return second.movie(pos, movieMaker.getCorrectSecondPlayerMovies(pos), movieMaker.getEmptyCells(pos));
+        return second.movie(pos.clone(), movieMaker.getCorrectSecondPlayerMovies(pos), movieMaker.getEmptyCells(pos));
     }
 
     @Override
@@ -114,5 +114,16 @@ public class SimpleGameManager implements GameManager {
     @Override
     public boolean isReady() {
         return positionGenerator != null && movieMaker != null && finishChecker != null && size > 0;
+    }
+
+    @Override
+    public GameManager clone() {
+        GameManager copy = new SimpleGameManager();
+        copy.setFinishChecker(this.getFinishChecker());
+        copy.setMovieMaker(this.getMovieMaker());
+        copy.setPositionGenerator(this.getPositionGenerator());
+        copy.setTileMerger(this.getTileMerger());
+        copy.setSize(this.getSize());
+        return copy;
     }
 }

@@ -47,6 +47,8 @@ public class Server2048 {
     public Result playGame() throws IncorrectMovieException {
         gameManager.setFirst(first);
         gameManager.setSecond(second);
+        first.init();
+        second.init();
         Position pos = gameManager.generatePosition();
         Integer movie = 0;
         Integer points = 0;
@@ -54,12 +56,14 @@ public class Server2048 {
             FirstPlayerMovie movie1;
             SecondPlayerMovie movie2;
             System.out.println(pos);
+            System.out.println("---------------");
             movie1 = gameManager.findFirstMovie(pos);
             gameManager.makeMovie(pos, movie1);
             movie++;
             movie2 = gameManager.findSecondMovie(pos);
             gameManager.makeMovie(pos, movie2);
         }
+        System.out.println(pos);
         return new Result(pos, movie, points);
     }
 }

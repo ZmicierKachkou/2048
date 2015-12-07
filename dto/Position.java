@@ -3,6 +3,7 @@ package dto;
 import dto.tiles.Tile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -79,6 +80,13 @@ public class Position {
             }
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = size;
+        result = 31 * result + (table != null ? Arrays.deepHashCode(table) : 0);
+        return result;
     }
 
     @Override

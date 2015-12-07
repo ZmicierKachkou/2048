@@ -2,6 +2,7 @@ package players.firstplayer;
 
 import dto.Position;
 import dto.movies.FirstPlayerMovie;
+import rules.gamemanager.GameManager;
 
 import java.util.List;
 import java.util.Scanner;
@@ -14,7 +15,7 @@ import java.util.Scanner;
 public class HumanFirstPlayer extends AbstractFirstPlayer {
 
     @Override
-    public FirstPlayerMovie movie(Position position, List<FirstPlayerMovie> movies) {
+    public FirstPlayerMovie movie(Position position, List<FirstPlayerMovie> movies, final GameManager manager) {
         System.out.println("Your movie?");
         Scanner sc = new Scanner(System.in);
         while(true) {

@@ -14,4 +14,8 @@ import java.util.List;
  */
 public abstract class AbstractSecondPlayer {
     public abstract SecondPlayerMovie movie(Position position, List<Tile> tiles, List<Coords> coords);
+
+    public void init() {
+
+    }
 }

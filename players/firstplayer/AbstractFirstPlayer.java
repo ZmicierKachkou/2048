@@ -2,6 +2,7 @@ package players.firstplayer;
 
 import dto.Position;
 import dto.movies.FirstPlayerMovie;
+import rules.gamemanager.GameManager;
 
 import java.util.List;
 
@@ -11,5 +12,9 @@ import java.util.List;
  * @author Źmicier Dzikański
  */
 public abstract class AbstractFirstPlayer {
-    public abstract FirstPlayerMovie movie(Position position, List<FirstPlayerMovie> movies);
+    public abstract FirstPlayerMovie movie(Position position, List<FirstPlayerMovie> movies, final GameManager manager);
+
+    public void init() {
+
+    }
 }

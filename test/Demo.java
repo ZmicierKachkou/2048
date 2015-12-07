@@ -1,9 +1,10 @@
 package test;
 
 import exceptions.IncorrectMovieException;
-import players.firstplayer.AbstractFirstPlayer;
-import players.firstplayer.HumanFirstPlayer;
+import players.firstplayer.*;
+import players.firstplayer.genetic.impl.BasicPositionEstimator;
 import players.secondplayer.AbstractSecondPlayer;
+import players.secondplayer.QuasiRandomSecondPlayer;
 import players.secondplayer.RandomSecondPlayer;
 import rules.finishchecker.impl.InfinityGameFinishChecker;
 import rules.gamemanager.GameManager;
@@ -20,8 +21,8 @@ import server.Server2048;
  */
 public class Demo {
     public static void main(String[] args) throws IncorrectMovieException {
-        AbstractFirstPlayer first = new HumanFirstPlayer();
-        AbstractSecondPlayer second = new RandomSecondPlayer();
+        AbstractFirstPlayer first = new GeneticFirstPlayer(new BasicPositionEstimator());
+        AbstractSecondPlayer second = new QuasiRandomSecondPlayer();
         GameManager gameManager = new SimpleGameManager();
         gameManager.setFinishChecker(new InfinityGameFinishChecker());
         gameManager.setMovieMaker(new SimpleMovieMaker2048());

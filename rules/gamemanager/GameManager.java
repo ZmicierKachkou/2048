@@ -16,7 +16,7 @@ import rules.tilesmerger.TileMerger;
  *
  * @author Źmicier Dzikański
  */
-public interface GameManager {
+public interface GameManager extends Cloneable {
     PositionGenerator getPositionGenerator();
     void setPositionGenerator(PositionGenerator positionGenerator);
     Position generatePosition();
@@ -42,4 +42,6 @@ public interface GameManager {
     int getSize();
 
     boolean isReady();
+
+    GameManager clone();
 }

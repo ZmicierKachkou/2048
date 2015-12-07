@@ -3,18 +3,20 @@ package players.firstplayer;
 import dto.Position;
 import dto.movies.FirstPlayerMovie;
 import rules.gamemanager.GameManager;
+import rules.gamemanager.impl.SimpleGameManager;
 
 import java.util.List;
 
 /**
- * Created on 29.09.2015.
+ * Created on 31.10.2015.
  *
  * @author Źmicier Dzikański
  */
-public class RandomFirstPlayer extends AbstractFirstPlayer{
+public class CornerFirstPlayer extends AbstractFirstPlayer{
 
     @Override
     public FirstPlayerMovie movie(Position position, List<FirstPlayerMovie> movies, final GameManager manager) {
-        return movies.get((int)Math.floor(Math.random() * movies.size()));
+        if(movies.get(0) == FirstPlayerMovie.DOWN && movies.size() > 1) return movies.get(1);
+        return movies.get(0);
     }
 }
