@@ -6,7 +6,7 @@ import dto.tiles.Tile;
 import dto.movies.FirstPlayerMovie;
 import dto.movies.SecondPlayerMovie;
 import exceptions.IncorrectMovieException;
-import rules.tilesmerger.TileMerger;
+import rules.tilesmerger.TilesMerger;
 
 import java.util.List;
 
@@ -14,18 +14,25 @@ import java.util.List;
  * Created on 29.09.2015.
  *
  * @author Źmicier Dzikański
+ *
+ * This manager is responsible for checking movies. It uses TileMerger for correct tile merge
  */
-public interface MovieMaker {
-    TileMerger getTileMerger();
-    void setTileMerger(TileMerger tileMerger);
+public abstract class MovieMaker {
+    private TilesMerger tilesMerger;
 
-    boolean isCorrectMovie(Position position, FirstPlayerMovie movie);
-    boolean isCorrectMovie(Position position, SecondPlayerMovie movie);
+    public TilesMerger getTilesMerger() {
+        return tilesMerger;
+    }
 
-    void movie(Position position, FirstPlayerMovie movie) throws IncorrectMovieException;
-    void movie(Position position, SecondPlayerMovie movie);
+    public void setTilesMerger(TilesMerger tilesMerger) {
+        this.tilesMerger = tilesMerger;
+    }
 
-    List<FirstPlayerMovie> getCorrectFirstPlayerMovies(Position position);
-    List<Tile> getCorrectSecondPlayerMovies(Position position);
-    List<Coords> getEmptyCells(Position position);
+    public abstract int movie(Position position, FirstPlayerMovie movie) throws IncorrectMovieException;
+    public abstract int movie(Position position, FirstPlayerMovie movie, boolean clearCache) throws IncorrectMovieException;
+    public abstract void movie(Position position, SecondPlayerMovie movie);
+
+    public abstract List<FirstPlayerMovie> getCorrectFirstPlayerMovies(Position position);
+    public abstract List<Tile> getCorrectSecondPlayerMovies(Position position);
+    public abstract List<Coords> getEmptyCells(Position position);
 }

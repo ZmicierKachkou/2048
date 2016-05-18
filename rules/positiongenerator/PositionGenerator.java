@@ -12,7 +12,16 @@ import java.util.List;
  * Created on 29.09.2015.
  *
  * @author Źmicier Dzikański
+ * this manager is used to generate first position
  */
 public interface PositionGenerator {
-    Position generatePosition(AbstractSecondPlayer player, List<Tile> tiles, List<Coords> coords, MovieMaker movieMaker);
+    /**
+     * Generates first position
+     * @param player is a second player. It is used because generation of the initial position may be considered
+     *               as a movie of the second player
+     * @param movieMaker is an instance, which is responsible for correct movies
+     * @param size is a size of position
+     * @return new position
+     */
+    Position generatePosition(AbstractSecondPlayer player, MovieMaker movieMaker, int size);
 }

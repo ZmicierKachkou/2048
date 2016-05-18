@@ -3,7 +3,6 @@ package players.firstplayer;
 import dto.Position;
 import dto.movies.FirstPlayerMovie;
 import rules.gamemanager.GameManager;
-import rules.gamemanager.impl.SimpleGameManager;
 
 import java.util.List;
 

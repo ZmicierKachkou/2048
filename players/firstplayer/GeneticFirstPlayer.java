@@ -3,6 +3,7 @@ package players.firstplayer;
 import dto.Position;
 import dto.movies.FirstPlayerMovie;
 import exceptions.IncorrectMovieException;
+import players.firstplayer.genetic.CoeffsGenerator;
 import players.firstplayer.genetic.PositionEstimator;
 import rules.gamemanager.GameManager;
 
@@ -39,11 +40,10 @@ public class GeneticFirstPlayer extends AbstractFirstPlayer{
         for(FirstPlayerMovie movie: movies) {
             Position potentialPosition = position.clone();
             try{
-                manager.getMovieMaker().movie(potentialPosition, movie);
+                manager.getMovieMaker().movie(potentialPosition, movie, false);
             }
             catch(IncorrectMovieException e) { continue; }
             float currEstimate = positionEstimator.estimatePosition(potentialPosition);
-            System.out.println("Movie: " + movie + ", estimation: " + currEstimate);
             if(currEstimate > bestEstimate) {
                 bestEstimate = currEstimate;
                 bestMovie = movie;

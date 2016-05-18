@@ -17,9 +17,27 @@ public class BasicPositionEstimator implements PositionEstimator {
     private TreeMap<Tile, List<Coords>> map;
     private int tiles = 0;
     private int chains[][];
+    private float verticalPairs, horisontalPairs;
+    private float weightedVerticalPairs, weightedHorisontalPairs;
     private Position p;
+
+    float[] coeffs = {0.012190152f, 0.22678046f, 0.02301026f, 0.0066818492f, 0.003412304f, 0.0359393f, 0.028191911f, 0.010168288f, 4.9580354E-4f, 0.036333844f, 0.23074082f, 0.036072716f, 0.0011799715f, 0.001978657f, 7.993542E-4f, 0.02928545f, 0.020526076f, 0.05104921f, 0.031203484f};
+    boolean array = false;
+
+    public float[] getCoeffs() {
+        return coeffs;
+    }
+
+    public void setCoeffs(float[] coeffs) {
+        this.coeffs = coeffs;
+    }
+
     private void generateParams(Position p) {
         tiles = 0;
+        verticalPairs = -1;
+        horisontalPairs = -1;
+        weightedHorisontalPairs = -1;
+        weightedVerticalPairs = -1;
         this.p = p;
         map = new TreeMap<Tile, List<Coords>>(new Comparator<Tile>() {
             @Override
@@ -57,34 +75,92 @@ public class BasicPositionEstimator implements PositionEstimator {
         return p.getSize()*p.getSize() - tiles;
     }
 
+    private float numberOfHorizontalPairs() {
+        if(horisontalPairs == -1) {
+            horisontalPairs = 0;
+            Tile lastTile = null;
+            for (int x = 0; x < p.getSize(); x++) {
+                for (int y = 0; y < p.getSize(); y++) {
+                    if (p.getTile(x, y) != null) {
+                        if (p.getTile(x, y).equals(lastTile)) {
+                            horisontalPairs++;
+                            lastTile = null;
+                        } else lastTile = p.getTile(x, y);
+                    }
+                }
+                lastTile = null;
+            }
+        }
+        return horisontalPairs;
+    }
+
+    private float numberOfVerticalPairs() {
+        if(verticalPairs == -1) {
+            verticalPairs = 0;
+            Tile lastTile = null;
+            for (int y = 0; y < p.getSize(); y++) {
+                for (int x = 0; x < p.getSize(); x++) {
+                    if (p.getTile(x, y) != null) {
+                        if (p.getTile(x, y).equals(lastTile)) {
+                            verticalPairs++;
+                            lastTile = null;
+                        } else lastTile = p.getTile(x, y);
+                    }
+                }
+                lastTile = null;
+            }
+        }
+        return verticalPairs;
+    }
+
+    private float maxNumberOfPairsInOneDirection() {
+        return Math.max(numberOfHorizontalPairs(), numberOfVerticalPairs());
+    }
+
+    private float weightedNumberOfHorizontalPairs() {
+        if(weightedHorisontalPairs == -1) {
+            weightedHorisontalPairs = 0;
+            Tile lastTile = null;
+            for (int x = 0; x < p.getSize(); x++) {
+                for (int y = 0; y < p.getSize(); y++) {
+                    if (p.getTile(x, y) != null) {
+                        if (p.getTile(x, y).equals(lastTile)) {
+                            weightedHorisontalPairs += Math.log((Integer)p.getTile(x,y).getValue());
+                            lastTile = null;
+                        } else lastTile = p.getTile(x, y);
+                    }
+                }
+                lastTile = null;
+            }
+        }
+        return horisontalPairs;
+    }
+
+    private float weightedNumberOfVerticalPairs() {
+        if(weightedVerticalPairs == -1) {
+            weightedVerticalPairs = 0;
+            Tile lastTile = null;
+            for (int y = 0; y < p.getSize(); y++) {
+                for (int x = 0; x < p.getSize(); x++) {
+                    if (p.getTile(x, y) != null) {
+                        if (p.getTile(x, y).equals(lastTile)) {
+                            weightedVerticalPairs += Math.log((Integer)p.getTile(x,y).getValue());
+                            lastTile = null;
+                        } else lastTile = p.getTile(x, y);
+                    }
+                }
+                lastTile = null;
+            }
+        }
+        return verticalPairs;
+    }
+
+    private float weightedMaxNumberOfPairsInOneDirection() {
+        return Math.max(weightedNumberOfHorizontalPairs(), weightedNumberOfVerticalPairs());
+    }
+
     private float numberOfPairs() {
-        int pairs = 0;
-        Tile lastTile = null;
-        for(int x = 0; x < p.getSize(); x++) {
-            for(int y = 0; y < p.getSize(); y++) {
-                if(p.getTile(x,y) != null) {
-                    if(p.getTile(x,y).equals(lastTile)) {
-                        pairs++;
-                        lastTile = null;
-                    }
-                    else lastTile = p.getTile(x,y);
-                }
-            }
-            lastTile = null;
-        }
-        for(int y = 0; y < p.getSize(); y++) {
-            for(int x = 0; x < p.getSize(); x++) {
-                if(p.getTile(x,y) != null) {
-                    if(p.getTile(x,y).equals(lastTile)) {
-                        pairs++;
-                        lastTile = null;
-                    }
-                    else lastTile = p.getTile(x,y);
-                }
-            }
-            lastTile = null;
-        }
-        return pairs;
+        return numberOfHorizontalPairs() + numberOfVerticalPairs();
     }
 
     private boolean isCorrectСontinuation(Tile thisTile, Tile thatTile) {
@@ -267,7 +343,7 @@ public class BasicPositionEstimator implements PositionEstimator {
                     if((list.get(i).getValue() - list.get(i-1).getValue()) * (list.get(i+1).getValue() - list.get(i).getValue()) < 0) counter++;
             }
         }
-        return -counter/3;
+        return -counter;
     }
 
     private float columnPicks() {
@@ -282,13 +358,58 @@ public class BasicPositionEstimator implements PositionEstimator {
                 if((list.get(i).getValue() - list.get(i-1).getValue()) * (list.get(i+1).getValue() - list.get(i).getValue()) < 0) counter++;
             }
         }
-        return -counter/3;
+        return -counter;
+    }
+
+    private float goodRaws() {
+        float counter = 0;
+        for(int x = 0; x < p.getSize(); x++) {
+            List<IntegerTile> list = new ArrayList<IntegerTile>();
+            for(int y = 0; y<p.getSize(); y++)
+                if(p.getTile(x, y) != null && p.getTile(x, y) instanceof IntegerTile &&
+                        (list.size() == 0 || !p.getTile(x,y).equals(list.get(list.size()-1))))
+                    list.add((IntegerTile)p.getTile(x,y));
+            boolean isGood = true;
+            for(int i=1; i<list.size()-1; i++) {
+                if((list.get(i).getValue() - list.get(i-1).getValue()) * (list.get(i+1).getValue() - list.get(i).getValue()) < 0) {
+                    isGood = false;
+                    break;
+                }
+            }
+            if(isGood) counter++;
+        }
+        return counter;
+    }
+
+    private float goodColumns() {
+        float counter = 0;
+        for(int y = 0; y < p.getSize(); y++) {
+            List<IntegerTile> list = new ArrayList<IntegerTile>();
+            for(int x = 0; x<p.getSize(); x++)
+                if(p.getTile(x, y) != null && p.getTile(x, y) instanceof IntegerTile &&
+                        (list.size() == 0 || !p.getTile(x,y).equals(list.get(list.size()-1))))
+                    list.add((IntegerTile)p.getTile(x,y));
+            boolean isGood = true;
+            for(int i=1; i<list.size()-1; i++) {
+                if((list.get(i).getValue() - list.get(i-1).getValue()) * (list.get(i+1).getValue() - list.get(i).getValue()) < 0) {
+                    isGood = false;
+                    break;
+                }
+            }
+            if(isGood) counter++;
+        }
+        return counter;
     }
 
     @Override
     public float estimatePosition(Position p) {
         generateParams(p);
-        return 1*numberOfDifferentTiles() + 1*numberOfEmptyCells() + 1*numberOfPairs() + 1*longestChain() + 10*longestChainFromMaxTile() +
-                10*maxTileInCorner() + 12*numberOfMaxFragments() + 0*maxTileNotInCorner() + 10*largeTilesAreNear() + rowPicks() + 10*columnPicks();
+        return coeffs[0]*numberOfDifferentTiles() + coeffs[1]*numberOfEmptyCells() + coeffs[2]*numberOfHorizontalPairs() +
+                coeffs[3]*numberOfVerticalPairs() + coeffs[4]*maxNumberOfPairsInOneDirection() + coeffs[5]*numberOfPairs() +
+                coeffs[6]*longestChain() + coeffs[7]*longestChainFromMaxTile() + coeffs[8]*maxTileInCorner() +
+                coeffs[9]*numberOfMaxFragments() + coeffs[10]*maxTileNotInCorner() + coeffs[11]*largeTilesAreNear() +
+                coeffs[12]*rowPicks() + coeffs[13]*columnPicks() + coeffs[14]*goodColumns() + coeffs[15]*goodRaws() +
+                coeffs[16]*weightedNumberOfHorizontalPairs() + coeffs[17]*weightedNumberOfVerticalPairs() +
+                coeffs[18]*weightedMaxNumberOfPairsInOneDirection();
     }
 }

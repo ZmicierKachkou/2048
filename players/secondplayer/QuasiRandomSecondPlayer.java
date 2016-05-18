@@ -25,6 +25,5 @@ public class QuasiRandomSecondPlayer extends AbstractSecondPlayer{
         movie++;
         return new SecondPlayerMovie(coords.get(Math.abs(31*movie + position.hashCode()) % coords.size()),
                 tiles.get(Math.abs(movie + 31 * position.hashCode()) % tiles.size()));
-        //return new SecondPlayerMovie(coords.get(0),tiles.get(Math.abs(0)));
     }
 }

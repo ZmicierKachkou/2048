@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="server"/>
+
+
+    <bean id="positionEstimator" class="players.firstplayer.genetic.impl.BasicPositionEstimator" />
+
+    <bean id="firstPlayer" class="players.firstplayer.GeneticFirstPlayer">
+        <property name="positionEstimator" ref="positionEstimator"/>
+    </bean>
+
+    <bean id="secondPlayer" class="players.secondplayer.RandomSecondPlayer" />
+
+    <bean id="finishChecker" class="rules.finishchecker.impl.InfinityGameFinishChecker" />
+    <bean id="positionGenerator" class="rules.positiongenerator.impl.SimplePositionGenerator" />
+    <bean id="pointsCounter" class="rules.pointscounter.impl.SimplePointsCounter" />
+
+    <bean id="tilesMerger" class="rules.tilesmerger.impl.SimpleTilesMerger2048">
+        <property name="pointsCounter" ref="pointsCounter" />
+    </bean>
+
+    <bean id="movieMaker" class="rules.moviemaker.impl.SimpleMovieMaker2048"/>
+
+    <bean id="gameManager" class="rules.gamemanager.GameManager">
+
+        <property name="finishChecker" ref="finishChecker" />
+        <property name="movieMaker" ref="movieMaker" />
+        <property name="positionGenerator" ref="positionGenerator" />
+        <property name="tilesMerger" ref="tilesMerger" />
+
+        <property name="size" value="4" />
+    </bean>
+
+    <bean id="server" class="server.Server2048" >
+        <constructor-arg ref="firstPlayer" />
+        <constructor-arg ref="secondPlayer" />
+        <constructor-arg ref="gameManager" />
+    </bean>
+
+    <bean id="coeffsGenerator" class="players.firstplayer.genetic.impl.BasicCoeffsGenerator">
+        <property name="server" ref="server" />
+    </bean>
+
+    <bean id="demo" class="test.Demo">
+    </bean>
+
+    <bean id="algorythm" class="players.firstplayer.genetic.main.GeneticAlgorythmServer">
+        <property name="coeffsGenerator" ref="coeffsGenerator" />
+    </bean>
+
 
 </beans>

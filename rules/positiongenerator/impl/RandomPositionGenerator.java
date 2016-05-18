@@ -18,8 +18,10 @@ import java.util.List;
 public class RandomPositionGenerator implements PositionGenerator {
 
     @Override
-    public Position generatePosition(AbstractSecondPlayer player, List<Tile> tiles, List<Coords> coords, MovieMaker movieMaker) {
-        Position pos = new Position();
+    public Position generatePosition(AbstractSecondPlayer player, MovieMaker movieMaker, int size) {
+        Position pos = new Position(size);
+        List<Coords> coords = movieMaker.getEmptyCells(pos);
+        List<Tile> tiles = movieMaker.getCorrectSecondPlayerMovies(pos);
         int n = (int)Math.floor(Math.random() * coords.size());
         SecondPlayerMovie movie = new SecondPlayerMovie(coords.get(n), tiles.get((int)Math.floor(Math.random() * tiles.size())));
         movieMaker.movie(pos, movie);

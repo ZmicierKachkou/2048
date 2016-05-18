@@ -8,5 +8,7 @@ import dto.Position;
  * @author Źmicier Dzikański
  */
 public interface PositionEstimator  {
+    float[] getCoeffs();
+    void setCoeffs(float[] coeffs);
     float estimatePosition(Position p);
 }

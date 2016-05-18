@@ -44,26 +44,32 @@ public class Server2048 {
         this.second = second;
     }
 
-    public Result playGame() throws IncorrectMovieException {
+    public Result playGame() {
         gameManager.setFirst(first);
         gameManager.setSecond(second);
         first.init();
-        second.init();
+        //second.init();
         Position pos = gameManager.generatePosition();
         Integer movie = 0;
         Integer points = 0;
         while(!gameManager.isFinish(pos)) {
             FirstPlayerMovie movie1;
             SecondPlayerMovie movie2;
-            System.out.println(pos);
-            System.out.println("---------------");
+            //System.out.println(pos);
+            //System.out.println("---------------");
             movie1 = gameManager.findFirstMovie(pos);
-            gameManager.makeMovie(pos, movie1);
+            try {
+                points += gameManager.makeMovie(pos, movie1);
+            }
+            catch(IncorrectMovieException e) {
+                System.out.println("Incorrect movie!");
+                return new Result(pos, movie, points);
+            }
             movie++;
             movie2 = gameManager.findSecondMovie(pos);
             gameManager.makeMovie(pos, movie2);
         }
-        System.out.println(pos);
+        //System.out.println(pos);
         return new Result(pos, movie, points);
     }
 }
