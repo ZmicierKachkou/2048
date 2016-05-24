@@ -4,6 +4,7 @@ import dto.Coords;
 import dto.Position;
 import dto.tiles.Tile;
 import dto.movies.SecondPlayerMovie;
+import rules.gamemanager.GameManager;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * @author Źmicier Dzikański
  */
 public abstract class AbstractSecondPlayer {
-    public abstract SecondPlayerMovie movie(Position position, List<Tile> tiles, List<Coords> coords);
+    public abstract SecondPlayerMovie movie(Position position, List<Tile> tiles, List<Coords> coords, GameManager manager);
 
     public void init() {
 

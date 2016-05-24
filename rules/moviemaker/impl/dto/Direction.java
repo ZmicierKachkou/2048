@@ -18,17 +18,17 @@ public class Direction {
     }
 
     private int getX(int x, int y) {
-        if(direction == FirstPlayerMovie.UP) return x;
-        else if(direction == FirstPlayerMovie.DOWN) return position.getSize()-x-1;
-        else if(direction == FirstPlayerMovie.LEFT) return y;
-        else return position.getSize()-y-1;
-    }
-
-    private int getY(int x, int y) {
         if(direction == FirstPlayerMovie.UP) return y;
         else if(direction == FirstPlayerMovie.DOWN) return position.getSize()-y-1;
         else if(direction == FirstPlayerMovie.LEFT) return x;
         else return position.getSize()-x-1;
+    }
+
+    private int getY(int x, int y) {
+        if(direction == FirstPlayerMovie.UP) return x;
+        else if(direction == FirstPlayerMovie.DOWN) return position.getSize()-x-1;
+        else if(direction == FirstPlayerMovie.LEFT) return y;
+        else return position.getSize()-y-1;
     }
 
     public Tile getTile(int x, int y) {

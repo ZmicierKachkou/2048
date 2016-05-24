@@ -4,7 +4,9 @@ import dto.Coords;
 import dto.Position;
 import dto.movies.SecondPlayerMovie;
 import dto.tiles.Tile;
+import exceptions.IncorrectMovieException;
 import players.secondplayer.AbstractSecondPlayer;
+import rules.gamemanager.GameManager;
 import rules.moviemaker.MovieMaker;
 import rules.positiongenerator.PositionGenerator;
 
@@ -18,14 +20,18 @@ import java.util.List;
 public class SimplePositionGenerator implements PositionGenerator {
 
     @Override
-    public Position generatePosition(AbstractSecondPlayer player, MovieMaker movieMaker, int size) {
+    public Position generatePosition(AbstractSecondPlayer player, GameManager gameManager, int size) {
         Position pos = new Position(size);
-        List<Coords> coords = movieMaker.getEmptyCells(pos);
-        List<Tile> tiles = movieMaker.getCorrectSecondPlayerMovies(pos);
-        SecondPlayerMovie movie = player.movie(pos, tiles, coords);
-        movieMaker.movie(pos, movie);
-        movie = player.movie(pos, tiles, coords);
-        movieMaker.movie(pos, movie);
+        List<Coords> coords = gameManager.getMovieMaker().getEmptyCells(pos);
+        List<Tile> tiles = gameManager.getMovieMaker().getCorrectSecondPlayerMovies(pos);
+        try {
+            SecondPlayerMovie movie = player.movie(pos, tiles, coords, gameManager);
+            gameManager.getMovieMaker().movie(pos, movie);
+            movie = player.movie(pos, tiles, coords, gameManager);
+            gameManager.getMovieMaker().movie(pos, movie);
+        } catch(IncorrectMovieException e) {
+            //#TODO
+        }
         return pos;
     }
 }

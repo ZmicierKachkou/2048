@@ -9,18 +9,17 @@ import rules.gamemanager.GameManager;
 import java.util.List;
 
 /**
- * Created on 14.11.2015.
+ * Created on 21.05.2016.
  *
  * @author Źmicier Dzikański
  */
-public class GeneticFirstPlayer extends AbstractFirstPlayer{
-
+public class RandomEstimatorFirstPlayer extends AbstractFirstPlayer {
     private PositionEstimator positionEstimator;
 
-    public GeneticFirstPlayer() {
+    public RandomEstimatorFirstPlayer() {
     }
 
-    public GeneticFirstPlayer(PositionEstimator positionEstimator) {
+    public RandomEstimatorFirstPlayer(PositionEstimator positionEstimator) {
         this.positionEstimator = positionEstimator;
     }
 
@@ -30,6 +29,15 @@ public class GeneticFirstPlayer extends AbstractFirstPlayer{
 
     public void setPositionEstimator(PositionEstimator positionEstimator) {
         this.positionEstimator = positionEstimator;
+    }
+
+    @Override
+    public void init() {
+        float[] coeffs = new float[20];
+        for(int i=0; i<20; i++) {
+            coeffs[i] = (float)Math.random();
+        }
+        positionEstimator.setCoeffs(coeffs);
     }
 
     @Override

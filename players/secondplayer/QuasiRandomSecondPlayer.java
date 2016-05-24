@@ -4,6 +4,7 @@ import dto.Coords;
 import dto.Position;
 import dto.movies.SecondPlayerMovie;
 import dto.tiles.Tile;
+import rules.gamemanager.GameManager;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class QuasiRandomSecondPlayer extends AbstractSecondPlayer{
     }
 
     @Override
-    public SecondPlayerMovie movie(Position position, List<Tile> tiles, List<Coords> coords) {
+    public SecondPlayerMovie movie(Position position, List<Tile> tiles, List<Coords> coords, GameManager manager) {
         movie++;
         return new SecondPlayerMovie(coords.get(Math.abs(31*movie + position.hashCode()) % coords.size()),
                 tiles.get(Math.abs(movie + 31 * position.hashCode()) % tiles.size()));

@@ -111,7 +111,10 @@ public class SimpleMovieMaker2048 extends MovieMaker {
     }
 
     @Override
-    public void movie(Position pos, SecondPlayerMovie movie) {
+    public void movie(Position pos, SecondPlayerMovie movie) throws IncorrectMovieException {
+        if(pos.getTile(movie.getX(), movie.getY()) != null) {
+            throw new IncorrectMovieException();
+        }
         pos.setTile(movie.getX(), movie.getY(), movie.getTile());
     }
 

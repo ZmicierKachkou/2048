@@ -49,7 +49,7 @@ public class GameManager implements Cloneable {
     }
 
     public Position generatePosition() {
-        return positionGenerator.generatePosition(second, movieMaker, size);
+        return positionGenerator.generatePosition(second, this, size);
     }
 
     public FirstPlayerMovie findFirstMovie(Position pos) {
@@ -57,14 +57,14 @@ public class GameManager implements Cloneable {
     }
 
     public SecondPlayerMovie findSecondMovie(Position pos) {
-        return second.movie(pos.clone(), movieMaker.getCorrectSecondPlayerMovies(pos), movieMaker.getEmptyCells(pos));
+        return second.movie(pos.clone(), movieMaker.getCorrectSecondPlayerMovies(pos), movieMaker.getEmptyCells(pos), this.clone());
     }
 
     public int makeMovie(Position pos, FirstPlayerMovie movie) throws IncorrectMovieException {
         return movieMaker.movie(pos, movie);
     }
 
-    public void makeMovie(Position pos, SecondPlayerMovie movie) {
+    public void makeMovie(Position pos, SecondPlayerMovie movie) throws IncorrectMovieException {
         movieMaker.movie(pos, movie);
     }
 

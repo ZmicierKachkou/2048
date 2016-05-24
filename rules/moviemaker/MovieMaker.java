@@ -30,7 +30,7 @@ public abstract class MovieMaker {
 
     public abstract int movie(Position position, FirstPlayerMovie movie) throws IncorrectMovieException;
     public abstract int movie(Position position, FirstPlayerMovie movie, boolean clearCache) throws IncorrectMovieException;
-    public abstract void movie(Position position, SecondPlayerMovie movie);
+    public abstract void movie(Position position, SecondPlayerMovie movie) throws IncorrectMovieException;
 
     public abstract List<FirstPlayerMovie> getCorrectFirstPlayerMovies(Position position);
     public abstract List<Tile> getCorrectSecondPlayerMovies(Position position);

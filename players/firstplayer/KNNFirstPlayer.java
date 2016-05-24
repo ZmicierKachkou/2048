@@ -2,7 +2,7 @@ package players.firstplayer;
 
 import dto.Position;
 import dto.movies.FirstPlayerMovie;
-import players.firstplayer.knn.KNNResolver;
+import learning.knn.KNNResolver;
 import rules.gamemanager.GameManager;
 
 import java.util.List;
@@ -25,7 +25,12 @@ public class KNNFirstPlayer extends AbstractFirstPlayer{
     }
 
     @Override
+    public void init() {
+        kNNResolver.load("data.txt");
+    }
+
+    @Override
     public FirstPlayerMovie movie(Position position, List<FirstPlayerMovie> movies, GameManager manager) {
-        return kNNResolver.findNearest(position, movies, 1, 0);
+        return kNNResolver.findNearest(position, movies);
     }
 }
